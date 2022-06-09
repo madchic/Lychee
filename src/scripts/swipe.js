@@ -4,59 +4,59 @@
 
 swipe = {
 
-	obj       : null,
-	tolerance : 150,
-	offset    : 0
+  obj: null,
+  tolerance: 150,
+  offset: 0
 
 }
 
-swipe.start = function(obj, tolerance) {
+swipe.start = function (obj, tolerance) {
 
-	if (obj)       swipe.obj       = obj
-	if (tolerance) swipe.tolerance = tolerance
+  if (obj) swipe.obj = obj
+  if (tolerance) swipe.tolerance = tolerance
 
-	return true
-
-}
-
-swipe.move = function(e) {
-
-	if (swipe.obj===null) return false
-
-	swipe.offset = -1 * e.x
-
-	swipe.obj.css({
-		WebkitTransform : 'translateX(' + swipe.offset + 'px)',
-		MozTransform    : 'translateX(' + swipe.offset + 'px)',
-		transform       : 'translateX(' + swipe.offset + 'px)'
-	})
+  return true
 
 }
 
-swipe.stop = function(e, left, right) {
+swipe.move = function (e) {
 
-	// Only execute once
-	if (swipe.obj==null) return false
+  if (swipe.obj === null) return false
 
-	if (e.x<=-swipe.tolerance) {
+  swipe.offset = -1 * e.x
 
-		left(true)
+  swipe.obj.css({
+    WebkitTransform: 'translateX(' + swipe.offset + 'px)',
+    MozTransform: 'translateX(' + swipe.offset + 'px)',
+    transform: 'translateX(' + swipe.offset + 'px)'
+  })
 
-	} else if (e.x>=swipe.tolerance) {
+}
 
-		right(true)
+swipe.stop = function (e, left, right) {
 
-	} else {
+  // Only execute once
+  if (swipe.obj == null) return false
 
-		swipe.obj.css({
-			WebkitTransform : 'translateX(0px)',
-			MozTransform    : 'translateX(0px)',
-			transform       : 'translateX(0px)'
-		})
+  if (e.x <= -swipe.tolerance) {
 
-	}
+    left(true)
 
-	swipe.obj    = null
-	swipe.offset = 0
+  } else if (e.x >= swipe.tolerance) {
+
+    right(true)
+
+  } else {
+
+    swipe.obj.css({
+      WebkitTransform: 'translateX(0px)',
+      MozTransform: 'translateX(0px)',
+      transform: 'translateX(0px)'
+    })
+
+  }
+
+  swipe.obj = null
+  swipe.offset = 0
 
 }

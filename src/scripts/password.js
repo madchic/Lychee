@@ -4,83 +4,85 @@
 
 password = {
 
-	value: ''
+  value: ''
 
 }
 
-password.get = function(albumID, callback) {
+password.get = function (albumID, callback) {
 
-	if (lychee.publicMode===false)                                  callback()
-	else if (album.json && album.json.password==='0')               callback()
-	else if (albums.json && albums.getByID(albumID).password==='0') callback()
-	else if (!albums.json && !album.json) {
+  if (lychee.publicMode === false) callback()
+  else if (album.json && album.json.password === '0') callback()
+  else if (albums.json && albums.getByID(albumID).password === '0') callback()
+  else if (!albums.json && !album.json) {
 
-		// Continue without password
+    // Continue without password
 
-		album.json = { password: true }
-		callback('')
+    album.json = {
+      password: true
+    }
+    callback('')
 
-	} else {
+  } else {
 
-		// Request password
+    // Request password
 
-		password.getDialog(albumID, callback)
+    password.getDialog(albumID, callback)
 
-	}
+  }
 
 }
 
-password.getDialog = function(albumID, callback) {
+password.getDialog = function (albumID, callback) {
 
-	const action = (data) => {
+  const action = (data) => {
 
-		let passwd = data.password
+    let passwd = data.password
 
-		let params = {
-			albumID,
-			password: passwd
-		}
+    let params = {
+      albumID,
+      password: passwd
+    }
 
-		api.post('Album::getPublic', params, function(data) {
+    api.post('Album::getPublic', params, function (data) {
 
-			if (data===true) {
-				basicModal.close()
-				password.value = passwd
-				callback()
-			} else {
-				basicModal.error('password')
-			}
+      if (data === true) {
+        basicModal.close()
+        password.value = passwd
+        callback()
+      } else {
+        basicModal.error('password')
+      }
 
-		})
+    })
 
-	}
+  }
 
-	const cancel = () => {
+  const cancel = () => {
 
-		basicModal.close()
-		if (!visible.albums()) lychee.goto()
+    basicModal.close()
+    if (!visible.albums()) lychee.goto()
 
-	}
+  }
 
-	let msg = `
+  let msg = `
 	          <p>
 	              This album is protected by a password. Enter the password below to view the photos of this album:
 	              <input name='password' class='text' type='password' placeholder='password' value=''>
 	          </p>
 	          `
 
-	basicModal.show({
-		body: msg,
-		buttons: {
-			action: {
-				title: 'Enter',
-				fn: action
-			},
-			cancel: {
-				title: 'Cancel',
-				fn: cancel
-			}
-		}
-	})
+  basicModal.show({
+    body: msg,
+    buttons: {
+      action: {
+        title: 'Enter',
+        fn: action
+      },
+      cancel: {
+        title: 'Cancel',
+        fn: cancel
+      }
+    }
+  })
 
 }

@@ -4,44 +4,46 @@
 
 api = {
 
-	path    : 'php/index.php',
-	onError : null
+  path: 'php/index.php',
+  onError: null
 
 }
 
-api.post = function(fn, params, callback) {
+api.post = function (fn, params, callback) {
 
-	loadingBar.show()
+  loadingBar.show()
 
-	params = $.extend({ function: fn }, params)
+  params = $.extend({
+    function: fn
+  }, params)
 
-	const success = (data) => {
+  const success = (data) => {
 
-		setTimeout(loadingBar.hide, 100)
+    setTimeout(loadingBar.hide, 100)
 
-		// Catch errors
-		if (typeof data==='string' && data.substring(0, 7)==='Error: ') {
-			api.onError(data.substring(7, data.length), params, data)
-			return false
-		}
+    // Catch errors
+    if (typeof data === 'string' && data.substring(0, 7) === 'Error: ') {
+      api.onError(data.substring(7, data.length), params, data)
+      return false
+    }
 
-		callback(data)
+    callback(data)
 
-	}
+  }
 
-	const error = (jqXHR, textStatus, errorThrown) => {
+  const error = (jqXHR, textStatus, errorThrown) => {
 
-		api.onError('Server error or API not found.', params, errorThrown)
+    api.onError('Server error or API not found.', params, errorThrown)
 
-	}
+  }
 
-	$.ajax({
-		type: 'POST',
-		url: api.path,
-		data: params,
-		dataType: 'json',
-		success,
-		error
-	})
+  $.ajax({
+    type: 'POST',
+    url: api.path,
+    data: params,
+    dataType: 'json',
+    success,
+    error
+  })
 
 }
